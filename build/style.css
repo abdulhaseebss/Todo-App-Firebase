@@ -1,0 +1,69 @@
+* {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.nav-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#username {
+    color: rgb(105, 105, 105)
+}
+
+button {
+    padding: 10px;
+    border: none;
+    background-color: gray;
+    font-size: large;
+    font-weight: 550;
+    border-radius: 10px;
+}
+
+button:hover {
+    background-color: rgb(114, 114, 114);
+    cursor: pointer;
+}
+
+#delete {
+    background-color: red;
+}
+
+#update {
+    background-color: rgb(159, 159, 248);
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    padding: 10px;
+    font-size: large;
+    font-weight: 550;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0px 0px 12px 1px gray;
+}
+
+.title {
+    font-weight: 600;
+    font-size: larger;
+}
+
+.user-with-img {
+    display: flex;
+    align-items: center;
+}
+
+#profileImage {
+    border-radius: 100px;
+    box-shadow: 0px 0px 10px 4px gray;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+
+}
