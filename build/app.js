@@ -1,6 +1,6 @@
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, GithubAuthProvider } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js';
 import { auth, db, storage } from './config.js';
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+import { collection, addDoc} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-storage.js'
 
 const form = document.querySelector('#form');
@@ -50,18 +50,58 @@ const provider = new GoogleAuthProvider();
 
 googleBtn.addEventListener('click', () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        const user = result.user;
-        console.log(user);
-        console.log(token);
-      }).catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        console.log(errorCode);
-        console.log(errorMessage);
-      });
+        .then((result) => {
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            console.log(token);
+            const user = result.user;
+            console.log(user);
+
+            const uid = user.uid
+
+            addDoc(collection(db, "user"), {
+                name: user.displayName,
+                email: user.email,
+                uid: user.uid,
+                profileUrl: user.photoURL
+            }).then((res) => {
+                console.log(res);
+                window.location = 'home.html';
+            }).catch((err) => {
+                console.log(err);
+            });
+
+        })
+        .catch((error) => {
+            const errorMessage = error.message;
+            console.log(errorMessage);
+        });
 });
+
+const githubProvider = new GithubAuthProvider();
+githubBtn.addEventListener('click', () => {
+    signInWithPopup(auth, githubProvider)
+        .then((result) => {
+            const credential = GithubAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+
+
+            
+            const user = result.user;
+            console.log(token);
+            console.log(user);
+            addDoc(collection(db, "user"), {
+                name: user.displayName,
+                uid: user.uid,
+                profileUrl: user.photoURL
+            }).then((res) => {
+                console.log(res);
+                window.location = 'home.html';
+            }).catch((err) => {
+                console.log(err);
+            });
+        }).catch((error) => {
+            const errorMessage = error.message;
+            console.log(errorMessage);
+        });
+})

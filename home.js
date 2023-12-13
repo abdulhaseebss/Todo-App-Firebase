@@ -32,7 +32,7 @@ onAuthStateChanged(auth, async (user) => {
 logout.addEventListener('click', () => {
     signOut(auth).then(() => {
         console.log('logout successfully');
-        window.location = 'index.html'
+        window.location = 'login.html'
     }).catch((error) => {
         console.log(error);
     });
@@ -80,6 +80,7 @@ function renderPost() {
 
         })
     })
+    title.value = ""
 }
 
 

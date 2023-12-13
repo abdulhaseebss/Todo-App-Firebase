@@ -80,6 +80,7 @@ function renderPost() {
 
         })
     })
+    title.value = ""
 }
 
 

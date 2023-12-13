@@ -1,6 +1,6 @@
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, GithubAuthProvider} from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, GithubAuthProvider,onAuthStateChanged  } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js';
 import { auth, db, storage } from './config.js';
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+import { collection, addDoc} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-storage.js'
 
 const form = document.querySelector('#form');
@@ -10,6 +10,21 @@ const img = document.querySelector('#img');
 const password = document.querySelector('#password');
 const googleBtn = document.querySelector('#googleBtn');
 const githubBtn = document.querySelector('#githubBtn');
+
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      const uid = user.uid;
+      console.log(uid);
+      window.location = "home.html"
+      // ...
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
 
 
 
@@ -39,8 +54,10 @@ form.addEventListener('submit', (event) => {
 
         })
         .catch((error) => {
+            const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorMessage);
+            alert(errorCode)
         });
 
 
@@ -56,8 +73,10 @@ googleBtn.addEventListener('click', () => {
             console.log(token);
             const user = result.user;
             console.log(user);
-            //data mangwalia aik [] query lagadi user.uid === uid agar data hua to array ma push hojayega arr.length < 0
-            addDoc(collection(db, "users"), {
+
+            const uid = user.uid
+
+            addDoc(collection(db, "user"), {
                 name: user.displayName,
                 email: user.email,
                 uid: user.uid,
@@ -83,11 +102,12 @@ githubBtn.addEventListener('click', () => {
             const credential = GithubAuthProvider.credentialFromResult(result);
             const token = credential.accessToken;
 
-            // The signed-in user info.
+
+            
             const user = result.user;
             console.log(token);
             console.log(user);
-            addDoc(collection(db, "users"), {
+            addDoc(collection(db, "user"), {
                 name: user.displayName,
                 uid: user.uid,
                 profileUrl: user.photoURL
