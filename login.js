@@ -7,6 +7,7 @@ const email = document.querySelector('#email');
 const password = document.querySelector('#password');
 const googleBtn = document.querySelector('#googleBtn');
 const githubBtn = document.querySelector('#githubBtn');
+const loginBtn = document.querySelector('#loginBtn');
 
 
 
@@ -25,9 +26,18 @@ onAuthStateChanged(auth, (user) => {
   });
 
 
+function load() {
+    loginBtn.innerHTML = `<div class="spinner">
+    <div class="bounce1"></div>
+    <div class="bounce2"></div>
+    <div class="bounce3"></div>
+  </div>`
+}
+
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
+    load()
     signInWithEmailAndPassword(auth, email.value, password.value)
         .then((userCredential) => {
             const user = userCredential.user;
@@ -41,6 +51,7 @@ form.addEventListener('submit', (event) => {
             // console.log(errorCode);
             // const errSplice = errorCode
             alert(errorCode)
+            loginBtn.innerHTML = `Login`
         });
 
 })
@@ -49,6 +60,7 @@ form.addEventListener('submit', (event) => {
 const provider = new GoogleAuthProvider();
 
 googleBtn.addEventListener('click', () => {
+    load()
     signInWithPopup(auth, provider)
         .then((result) => {
             const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -75,11 +87,13 @@ googleBtn.addEventListener('click', () => {
         .catch((error) => {
             const errorMessage = error.message;
             console.log(errorMessage);
+            loginBtn.innerHTML = `Login`
         });
 });
 
 const githubProvider = new GithubAuthProvider();
 githubBtn.addEventListener('click', () => {
+    load()
     signInWithPopup(auth, githubProvider)
         .then((result) => {
             const credential = GithubAuthProvider.credentialFromResult(result);
@@ -103,5 +117,6 @@ githubBtn.addEventListener('click', () => {
         }).catch((error) => {
             const errorMessage = error.message;
             console.log(errorMessage);
+            loginBtn.innerHTML = `Login`
         });
 })

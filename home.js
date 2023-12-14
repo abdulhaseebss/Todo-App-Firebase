@@ -9,24 +9,39 @@ const card = document.querySelector('#div');
 const profileImage = document.querySelector('#profileImage');
 const username = document.querySelector('#username');
 const logout = document.querySelector('#logout');
+const submit = document.querySelector('#submit');
 
+
+let uid;
 
 //user login or logout function
 onAuthStateChanged(auth, async (user) => {
     if (user) {
-        const uid = user.uid;
+         uid = user.uid;
         const q = query(collection(db, "user"), where("uid", "==", uid));
         const querySnapshot = await getDocs(q);
+        console.log(querySnapshot);
         querySnapshot.forEach((doc) => {
-            console.log(doc.data());
             username.innerHTML = doc.data().name
             profileImage.src = doc.data().profileUrl
+            // console.log(doc.data()).name;
         });
         getDataFromFirestore(user.uid)
     } else {
         window.location = 'index.html'
     }
 });
+
+
+function load() {
+    submit.innerHTML = `<div class="spinner">
+    <div class="bounce1"></div>
+    <div class="bounce2"></div>
+    <div class="bounce3"></div>
+  </div>`
+}
+
+
 
 
 logout.addEventListener('click', () => {
@@ -97,6 +112,7 @@ async function getDataFromFirestore(uid) {
     });
     console.log(arr);
     renderPost();
+    
 }
 
 
@@ -105,6 +121,7 @@ async function getDataFromFirestore(uid) {
 
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    load()
     try {
         const postObj = {
             title: title.value,
@@ -117,6 +134,7 @@ form.addEventListener('submit', async (event) => {
         arr = [postObj, ...arr];
         console.log(arr);
         renderPost();
+        submit.innerHTML = "Submit"
     } catch (e) {
         console.error("Error adding document: ", e);
     }

@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, GithubAuthProvider } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, GithubAuthProvider,onAuthStateChanged  } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js';
 import { auth, db, storage } from './config.js';
 import { collection, addDoc} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-storage.js'
@@ -10,17 +10,43 @@ const img = document.querySelector('#img');
 const password = document.querySelector('#password');
 const googleBtn = document.querySelector('#googleBtn');
 const githubBtn = document.querySelector('#githubBtn');
+const loading = document.querySelector('#loading');
+const register = document.querySelector('#register');
 
+
+// onAuthStateChanged(auth, (user) => {
+//     if (user) {
+//       // User is signed in, see docs for a list of available properties
+//       // https://firebase.google.com/docs/reference/js/auth.user
+//       const uid = user.uid;
+//       console.log(uid);
+//       window.location = "home.html"
+//       // ...
+//     } else {
+//       // User is signed out
+//       // ...
+//     }
+//   });
+
+
+function load() {
+    register.innerHTML = `<div class="spinner">
+    <div class="bounce1"></div>
+    <div class="bounce2"></div>
+    <div class="bounce3"></div>
+  </div>`
+}
 
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
+    load()
     createUserWithEmailAndPassword(auth, email.value, password.value)
         .then((userCredential) => {
             const user = userCredential.user;
             console.log(user);
             const file = img.files[0]
-            const storageRef = ref(storage, name.value);
+            const storageRef = ref(storage, email.value);
             uploadBytes(storageRef, file).then(() => {
                 getDownloadURL(storageRef).then((url) => {
                     addDoc(collection(db, "user"), {
@@ -39,8 +65,11 @@ form.addEventListener('submit', (event) => {
 
         })
         .catch((error) => {
+            const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorMessage);
+            alert(errorCode)
+            register.innerHTML = "Register"
         });
 
 
@@ -49,6 +78,7 @@ form.addEventListener('submit', (event) => {
 const provider = new GoogleAuthProvider();
 
 googleBtn.addEventListener('click', () => {
+    load()
     signInWithPopup(auth, provider)
         .then((result) => {
             const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -75,11 +105,13 @@ googleBtn.addEventListener('click', () => {
         .catch((error) => {
             const errorMessage = error.message;
             console.log(errorMessage);
+            register.innerHTML = "Register"
         });
 });
 
 const githubProvider = new GithubAuthProvider();
 githubBtn.addEventListener('click', () => {
+    load()
     signInWithPopup(auth, githubProvider)
         .then((result) => {
             const credential = GithubAuthProvider.credentialFromResult(result);
@@ -103,5 +135,6 @@ githubBtn.addEventListener('click', () => {
         }).catch((error) => {
             const errorMessage = error.message;
             console.log(errorMessage);
+            register.innerHTML = "Register"
         });
 })
