@@ -14,19 +14,19 @@ const loading = document.querySelector('#loading');
 const register = document.querySelector('#register');
 
 
-// onAuthStateChanged(auth, (user) => {
-//     if (user) {
-//       // User is signed in, see docs for a list of available properties
-//       // https://firebase.google.com/docs/reference/js/auth.user
-//       const uid = user.uid;
-//       console.log(uid);
-//       window.location = "home.html"
-//       // ...
-//     } else {
-//       // User is signed out
-//       // ...
-//     }
-//   });
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      const uid = user.uid;
+      console.log(uid);
+      window.location = "home.html"
+      // ...
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
 
 
 function load() {
@@ -56,7 +56,7 @@ form.addEventListener('submit', (event) => {
                         profileUrl: url
                     }).then((res) => {
                         console.log(res);
-                        window.location = 'login.html'
+                        window.location = 'index.html'
                     }).catch((err) => {
                         console.log(err);
                     })
