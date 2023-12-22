@@ -47,7 +47,7 @@ function load() {
 logout.addEventListener('click', () => {
     signOut(auth).then(() => {
         console.log('logout successfully');
-        window.location = 'login.html'
+        window.location = 'index.html'
     }).catch((error) => {
         console.log(error);
     });
@@ -87,6 +87,12 @@ function renderPost() {
         btn.addEventListener('click', async () => {
             console.log('update called', arr[index]);
             const updatedTitle = prompt( 'enter new Title' , arr[index].title);
+            if (updatedTitle === null) {
+                console.log("User clicked Cancel");
+                return;
+            } else {
+                console.log("User entered: " + updatedTitle);
+            }
             await updateDoc(doc(db, "posts", arr[index].docId), {
                 title: updatedTitle
             });
